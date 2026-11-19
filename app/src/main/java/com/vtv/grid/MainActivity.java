@@ -155,7 +155,7 @@ public class MainActivity extends Activity {
         return bgChosen;
     }
 
-    /** Đọc lại hình nền khi file thay đổi (tên + ngày sửa + dung lượng). Thu nhỏ về tối đa ~1600px cho nhẹ. */
+    /** Đọc lại hình nền khi file thay đổi (tên + ngày sửa + dung lượng). Thu nhỏ về tối đa 1920px (vừa khít TV Full HD). */
     private synchronized void loadBg() {
         File f = bgFile();
         if (f == null) {
@@ -172,17 +172,17 @@ public class MainActivity extends Activity {
             o.inJustDecodeBounds = true;
             BitmapFactory.decodeFile(f.getAbsolutePath(), o);
             int sample = 1;
-            while (o.outWidth / (sample * 2) >= 1280 && o.outHeight / (sample * 2) >= 720) sample *= 2;
+            while (o.outWidth / (sample * 2) >= 1920 && o.outHeight / (sample * 2) >= 1080) sample *= 2;
             o.inJustDecodeBounds = false;
             o.inSampleSize = sample;
             Bitmap b = BitmapFactory.decodeFile(f.getAbsolutePath(), o);
             if (b == null) return;
-            if (b.getWidth() > 1600) {
-                float r = 1600f / b.getWidth();
-                b = Bitmap.createScaledBitmap(b, 1600, Math.max(1, Math.round(b.getHeight() * r)), true);
+            if (b.getWidth() > 1920) {
+                float r = 1920f / b.getWidth();
+                b = Bitmap.createScaledBitmap(b, 1920, Math.max(1, Math.round(b.getHeight() * r)), true);
             }
             ByteArrayOutputStream bo = new ByteArrayOutputStream();
-            b.compress(Bitmap.CompressFormat.JPEG, 85, bo);
+            b.compress(Bitmap.CompressFormat.JPEG, 90, bo);
             bgUri = "data:image/jpeg;base64," + Base64.encodeToString(bo.toByteArray(), Base64.NO_WRAP);
         } catch (Throwable t) {
             bgUri = "";
